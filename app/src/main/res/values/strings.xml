@@ -1,0 +1,55 @@
+<resources>
+    <string name="app_name">Ronixtech Demo</string>
+
+
+    <!-- Login screen -->
+    <string name="login_activity_title">Login</string>
+    <string name="input_email_hint">Email</string>
+    <string name="input_password_hint">Password</string>
+    <string name="button_login_text">Login</string>
+    <string name="no_account_text">No account yet? Create one</string>
+
+    <!-- register screen -->
+    <string name="register_activity_title">Register</string>
+    <string name="input_name_hint">Name</string>
+    <string name="input_confirm_password_hint">Confirm Password</string>
+    <string name="button_register_text">Register</string>
+
+    <!-- Errors -->
+    <string name="err_short_name">at least 3 characters</string>
+    <string name="err_invalid_mail">email is not valid</string>
+    <string name="err_confirm_password">wrong password</string>
+    <string name="err_empty_password">password is empty</string>
+    <string name="err_worng_mail_or_password">wrong email or password</string>
+
+    <!-- Home Screen -->
+    <string name="home_activity_title">Home</string>
+    <string name="pref_logged_user_mail">logged_mail</string>
+    <string name="pref_logged_user_name">logged_user_name</string>
+    <string name="button_logout_text">Logout</string>
+    <string name="user_section_title">User</string>
+    <string name="ssid_section_title">SSID</string>
+    <string name="mqtt_section_title">MQTT</string>
+
+    <string name="connecting">connecting...</string>
+    <string name="retry_connection">Retry</string>
+    <string name="connect_wifi">Connect to wifi</string>
+
+    <!-- mqtt messages -->
+    <string name="connection_started">connection started, subscribed to topic and waiting for incoming messages...</string>
+    <string name="connection_lost">connection lost</string>
+
+    <!-- Network Error Messages -->
+    <string name="timeout_err">Connection Time Out</string>
+    <string name="noconnection_err">No Network Connection</string>
+    <string name="authfailure_err">Authentication Error</string>
+    <string name="server_err">Server Error</string>
+    <string name="network_err">Network Error</string>
+    <string name="parse_err">Parse Error</string>
+    <string name="permission_rationale">You should allow Wifi permissions so the app can connect.</string>
+    <string name="allow">allow</string>
+    <string name="permissions_granted">Permissions granted</string>
+    <string name="permissions_not_granted">Permissions are not granted.</string>
+
+
+</resources>
