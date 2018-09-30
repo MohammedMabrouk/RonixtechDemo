@@ -244,7 +244,7 @@ public class HomeActivity extends AppCompatActivity implements SSIDpresenter.OnS
             ActivityCompat.requestPermissions(this, PERMISSIONS_GROUP, GROUP_REQUEST_NUM);
 
         }
-        connectToWifi("THE BEAST", "needforspeed");
+        connectToWifi(ssid, pass);
     }
 
     /*
