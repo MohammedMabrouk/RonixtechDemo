@@ -50,6 +50,7 @@
     <string name="allow">allow</string>
     <string name="permissions_granted">Permissions granted</string>
     <string name="permissions_not_granted">Permissions are not granted.</string>
+    <string name="connected">connected!</string>
 
 
 </resources>

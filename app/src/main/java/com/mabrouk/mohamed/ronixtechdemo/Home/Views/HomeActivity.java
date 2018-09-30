@@ -5,11 +5,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -18,7 +16,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-
 
 import com.mabrouk.mohamed.ronixtechdemo.Home.Presenters.MqttPresenter;
 import com.mabrouk.mohamed.ronixtechdemo.Home.Presenters.SSIDpresenter;
@@ -30,10 +27,6 @@ import com.mabrouk.mohamed.ronixtechdemo.Utils.UserLogin;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.security.Permission;
-import java.security.Permissions;
-import java.util.List;
-
 
 public class HomeActivity extends AppCompatActivity implements SSIDpresenter.OnSSIDrequestListener, MqttPresenter.mqttListener {
     private final static String TAG = "HomeActivity" + "TAGG";
@@ -44,8 +37,8 @@ public class HomeActivity extends AppCompatActivity implements SSIDpresenter.OnS
     TextView userNameTextView;
     Button logoutBtn, retryBtn, wifiConnectBtn;
 
-    TextView connectingTextView, errorTextView, ssidTextView, mqttMessageTextView, mqttSectionTextView;
-    View mqttLayout, mainLayout;
+    TextView connectingTextView, errorTextView, ssidTextView, mqttMessageTextView, mqttSectionTextView, wifiStatusTv;
+    View mqttLayout, mainLayout, connectLayout;
 
     Activity mActivity;
 
@@ -79,6 +72,8 @@ public class HomeActivity extends AppCompatActivity implements SSIDpresenter.OnS
         wifiConnectBtn = findViewById(R.id.btn_connect_to_wifi);
         mqttMessageTextView = findViewById(R.id.tv_mqtt_message);
         mqttSectionTextView = findViewById(R.id.tv_mqtt_sction_title);
+        connectLayout = findViewById(R.id.connect_layout);
+        wifiStatusTv = findViewById(R.id.tv_wifi_status);
 
 
         mPresenter = new SSIDpresenter(this, this);
@@ -190,6 +185,7 @@ public class HomeActivity extends AppCompatActivity implements SSIDpresenter.OnS
 
 
             // show connect button
+            connectLayout.setVisibility(View.VISIBLE);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -202,49 +198,32 @@ public class HomeActivity extends AppCompatActivity implements SSIDpresenter.OnS
         mqttMessageTextView.setText(R.string.connection_lost);
     }
 
-    private void connectToWifi(String ssid, String pass){
+    private void connectToWifi(String ssid, String pass) {
         Log.v(TAG, "connect to wifi, ssid: " + ssid + " , pass: " + pass);
 
-        /*WifiConfiguration wifiConfig = new WifiConfiguration();
-        wifiConfig.SSID = String.format("\"%s\"", ssid);
-        wifiConfig.preSharedKey = String.format("\"%s\"", pass);
-
-        WifiManager wifiManager = (WifiManager)getApplicationContext().getSystemService(WIFI_SERVICE);
-            //remember id
-        int netId = wifiManager.addNetwork(wifiConfig);
-        wifiManager.disconnect();
-        wifiManager.enableNetwork(netId, true);
-        wifiManager.reconnect();*/
+        WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        if (wifiManager != null && !wifiManager.isWifiEnabled()) {
+            wifiManager.setWifiEnabled(true);
+        }
 
         WifiConfiguration conf = new WifiConfiguration();
-        conf.SSID = "\"" + ssid + "\"";
-        conf.preSharedKey = "\""+ pass +"\"";
+        conf.SSID = String.format("\"%s\"", ssid);
+        conf.preSharedKey = String.format("\"%s\"", pass);
 
-        WifiManager wifiManager = (WifiManager)getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        int netId = 0;
         if (wifiManager != null) {
-            wifiManager.addNetwork(conf);
-        }
+            netId = wifiManager.addNetwork(conf);
+            wifiManager.disconnect();
+            wifiManager.enableNetwork(netId, true);
+            wifiManager.reconnect();
 
-        List<WifiConfiguration> list = null;
-        if (wifiManager != null) {
-            list = wifiManager.getConfiguredNetworks();
-        }
-        if (list != null) {
-            for( WifiConfiguration i : list ) {
-                if(i.SSID != null && i.SSID.equals("\"" + ssid + "\"")) {
-                    wifiManager.disconnect();
-                    wifiManager.enableNetwork(i.networkId, true);
-                    wifiManager.reconnect();
-
-                    break;
-                }
-            }
+            wifiStatusTv.setVisibility(View.VISIBLE);
         }
 
 
     }
 
-    private void requestPermissions(){
+    private void requestPermissions() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                 android.Manifest.permission.ACCESS_NETWORK_STATE) || ActivityCompat.shouldShowRequestPermissionRationale(this,
                 android.Manifest.permission.CHANGE_NETWORK_STATE)) {
@@ -263,8 +242,9 @@ public class HomeActivity extends AppCompatActivity implements SSIDpresenter.OnS
         } else {
             Log.v(TAG, "case2");
             ActivityCompat.requestPermissions(this, PERMISSIONS_GROUP, GROUP_REQUEST_NUM);
-            connectToWifi(String.format("\"%s\"", "THE BEAST"), String.format("\"%s\"", "needforspeed"));
+
         }
+        connectToWifi("THE BEAST", "needforspeed");
     }
 
     /*
